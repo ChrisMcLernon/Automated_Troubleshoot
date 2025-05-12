@@ -1,4 +1,4 @@
-# Troubleshoot_JMC.ps1 
+# Autage.ps1 
 # Contributors: Chris McLernon
 # Description: Automates JMC triage for a POS register on Windows 11
 
