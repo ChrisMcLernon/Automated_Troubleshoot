@@ -3,8 +3,13 @@
 # Description: Automates JMC & XCCPEM triage for a POS register on Windows 11
 # Logging Enabled: All output and errors go to troubleshoot_log.txt
 
+# Logging Setup
 $logDate = Get-Date -Format "ddMMyyyy"
-$logFile = "troubleshoot_log_${logDate}.log"
+$logFolder = "Error_Logs"
+if (-not (Test-Path $logFolder)) {
+    New-Item -ItemType Directory -Path $logFolder | Out-Null
+}
+$logFile = Join-Path $logFolder "troubleshoot_log_${logDate}.txt"
 Start-Transcript -Path $logFile -Append
 
 function Write-Log {
@@ -12,6 +17,7 @@ function Write-Log {
     $timestamp = Get-Date -Format "[dd-MM-yyyy | HH:mm:ss]"
     Write-Host "$timestamp $Message"
 }
+
 
 try {
     # Step 1: Get Incident Number
