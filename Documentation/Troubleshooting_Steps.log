@@ -1,3 +1,5 @@
+Promo troubleshooting:
+
 Step 1: Accepts INC number and Generates error logging file
 Step 2: Grab Stack Dump from JMC
 Step 3: Check the XCCPEM service to ensure running or paused
@@ -5,4 +7,5 @@ Step 3: Check the XCCPEM service to ensure running or paused
         Grabs the bottom three line of log 
             (Where error logging is below header)
 Step 4: Creates and zips folder holding log files
-Step 5: Opens it and shows cd for INC description
+Step 5: 
+Step 6: Opens it and shows cd for INC description

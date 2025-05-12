@@ -1,5 +1,5 @@
 #Logs
-*.log
+*.txt
 *.zip
 
 # Runtime data
