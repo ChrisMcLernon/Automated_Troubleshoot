@@ -54,7 +54,7 @@ try {
     # Step 3: Check XCCPEM Service Status & Grab Log
     $serviceName = "XCCPEM"
     $logDir = "\\bbwres2843p02\c$\XCC\logPEM"
-    $xccOutputFile = "XCCPEM_${incidentNumber}.txt"
+    $xccOutputFile = "XCCPEM_${incidentNumber}.log"
 
     Write-Log "Checking status of service: $serviceName"
     $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
