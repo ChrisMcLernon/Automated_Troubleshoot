@@ -1,0 +1,47 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20250512191250
+Username: DESKTOP-TU6FPO4\Chris McLernon
+RunAs User: DESKTOP-TU6FPO4\Chris McLernon
+Configuration Name: 
+Machine: DESKTOP-TU6FPO4 (Microsoft Windows NT 10.0.19045.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command & {cd 'C:\Users\Chris McLernon\Desktop\Automated_Troubleshoot'; & 'C:\Users\Chris McLernon\Desktop\Automated_Troubleshoot\Autage.ps1'}
+Process ID: 27084
+PSVersion: 5.1.19041.5737
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.19041.5737
+BuildVersion: 10.0.19041.5737
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is Error_Logs\troubleshoot_log_12052025.txt
+[12-05-2025 | 19:13:16] ERROR: Incident number must start with 'INC' followed by digits (e.g., INC123456).
+[12-05-2025 | 19:13:38] ERROR: Incident number must start with 'INC' followed by digits (e.g., INC123456).
+1 : Promos Not Working
+[12-05-2025 | 19:13:46] ERROR: Invalid selection. Choose a number between 1 and 1.
+1 : Promos Not Working
+[12-05-2025 | 19:13:59] ERROR: Incorrect format. Expected: BBW(TAB/RES/COS)(Store Number)P(Device Number)
+[12-05-2025 | 19:13:59] Example: BBWCOS9999P99
+[12-05-2025 | 19:14:13] Using Incident ID: INC1 for Promos Not Working
+[12-05-2025 | 19:14:13] Scanning for java.exe processes...
+[12-05-2025 | 19:14:13] ERROR: No java.exe process found. Ensure JMC is running.
+[12-05-2025 | 19:14:13] Starting Promo debug workflow...
+[12-05-2025 | 19:14:13] Checking status of service: XCCPEM
+[12-05-2025 | 19:14:13] ERROR: Service 'XCCPEM' not found. Skipping service check.
+[12-05-2025 | 19:14:13] Attempting to access log directory: \\BBWCOS9999P99\c$\XCC\logPEM
+[12-05-2025 | 19:14:16] ERROR: Log directory not accessible: \\BBWCOS9999P99\c$\XCC\logPEM
+[12-05-2025 | 19:14:16] Created directory: triage_INC1
+[12-05-2025 | 19:14:16] WARNING: File not found, skipping: XCCPEM_INC1.txt
+[12-05-2025 | 19:14:16] WARNING: File not found, skipping: stack_INC1.txt
+[12-05-2025 | 19:14:16] WARNING: File not found, skipping: heapdump_INC1.hprof
+PS>TerminatingError(Test-Path): "Cannot bind argument to parameter 'Path' because it is null."
+>> TerminatingError(Test-Path): "Cannot bind argument to parameter 'Path' because it is null."
+>> TerminatingError(Test-Path): "Cannot bind argument to parameter 'Path' because it is null."
+>> TerminatingError(Test-Path): "Cannot bind argument to parameter 'Path' because it is null."
+[12-05-2025 | 19:14:16] UNHANDLED EXCEPTION: Cannot bind argument to parameter 'Path' because it is null.
+**********************
+Windows PowerShell transcript end
+End time: 20250512191416
+**********************

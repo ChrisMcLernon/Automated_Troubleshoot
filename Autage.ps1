@@ -335,7 +335,6 @@ try {
     $script:triageDir = Join-Path $currentDirectory "triage_$incidentNumber"
     $script:xccOutputFile = "XCCPEM_$incidentNumber.txt"
     $script:stackTraceFile = "stack_$incidentNumber.txt"
-    $script:jmapDumpFile = "heapdump_$incidentNumber.hprof"
     $script:promoLogPath = Join-Path $script:triageDir "promoFiles_$incidentNumber.log"
 
 
@@ -349,4 +348,3 @@ catch {
 finally {
     Close-Triage
 }
-
