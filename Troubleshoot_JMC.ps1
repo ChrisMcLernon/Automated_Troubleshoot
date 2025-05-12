@@ -43,12 +43,39 @@ try {
     Start-Process .\jstack.exe -ArgumentList "$jmcpid" -RedirectStandardOutput "$stackTraceFile" -Wait -NoNewWindow
     Pop-Location
 
-    # Step 3: Grab last 3 lines from XCCPEM log
+    # Step 3: Check XCCPEM Service Status & Grab Log
+    $serviceName = "XCCPEM"
     $logDir = "\\bbwres2843p02\c$\XCC\logPEM"
     $xccOutputFile = "XCCPEM_${incidentNumber}.txt"
-    Write-Log "Accessing XCCPEM logs from: $logDir"
 
+    Write-Log "Checking status of service: $serviceName"
+    $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
+
+    if (-not $service) {
+        Write-Log "ERROR: Service '$serviceName' not found. Skipping service check."
+    }
+    else {
+        Write-Log "Service status: $($service.Status)"
+    
+        if ($service.Status -eq 'Stopped') {
+            try {
+                Write-Log "Attempting to start '$serviceName'..."
+                Start-Service -Name $serviceName
+                Start-Sleep -Seconds 5
+                Write-Log "Service '$serviceName' started successfully."
+            }
+            catch {
+                Write-Log "ERROR: Failed to start service '$serviceName': $_"
+            }
+        }
+        else {
+            Write-Log "Service '$serviceName' is already running."
+        }
+    }
+
+    Write-Log "Accessing XCCPEM logs from: $logDir"
     $latestLog = Get-ChildItem $logDir -Filter *.log | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
     if (-not $latestLog) {
         Write-Log "ERROR: No log files found in $logDir"
         pause; exit 1
@@ -57,6 +84,7 @@ try {
     Write-Log "Found latest log: $($latestLog.Name)"
     $tailLines = Get-Content $latestLog.FullName | Select-Object -Last 3
     $tailLines | Out-File $xccOutputFile -Encoding UTF8
+
 
     # Step 4: Package Results
     $logsDir = "logs_${incidentNumber}"
