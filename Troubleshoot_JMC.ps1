@@ -3,7 +3,7 @@
 # Logging Enabled: All output and errors go to troubleshoot_log.txt
 
 $logDate = Get-Date -Format "ddMMyyyy"
-$logFile = "troubleshoot_log_${logDate}.txt"
+$logFile = "troubleshoot_log_${logDate}.log"
 Start-Transcript -Path $logFile -Append
 
 function Write-Log {
