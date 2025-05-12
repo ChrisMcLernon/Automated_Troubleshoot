@@ -1,4 +1,5 @@
 # Troubleshoot_JMC.ps1
+# Contributors: Chris McLernon
 # Description: Automates JMC & XCCPEM triage for a POS register on Windows 11
 # Logging Enabled: All output and errors go to troubleshoot_log.txt
 
@@ -26,10 +27,10 @@ try {
     Write-Log "Scanning for java.exe processes..."
     $javaProcess = Get-Process java -ErrorAction SilentlyContinue | Sort-Object -Property WorkingSet64 -Descending | Select-Object -First 1
     if (-not $javaProcess) {
-        Write-Log "ERROR: No java.exe process found. Ensure JMC is running."
-        pause; exit 1
+       Write-Log "ERROR: No java.exe process found. Ensure JMC is running."
+       pause; exit 1
     }
-
+    
     $jmcpid = $javaProcess.Id
     Write-Log "Targeting java.exe PID: $jmcpid (Memory: $([math]::Round($javaProcess.WorkingSet64 / 1MB, 2)) MB)"
 
@@ -85,7 +86,6 @@ try {
     Write-Log "Found latest log: $($latestLog.Name)"
     $tailLines = Get-Content $latestLog.FullName | Select-Object -Last 3
     $tailLines | Out-File $xccOutputFile -Encoding UTF8
-
 
     # Step 4: Package Results
     $logsDir = "logs_${incidentNumber}"
