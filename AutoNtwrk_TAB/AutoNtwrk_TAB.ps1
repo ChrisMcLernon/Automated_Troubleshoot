@@ -5,16 +5,40 @@
 # Configuration
 $correctSSID = "SpectrumSetup-ED"
 $waitBeforeReconnectSeconds = 5
+$logDate = Get-Date -Format "MMddyyyy_HH_mm_ss"
 
-# Relaunch script as admin if not already elevated
-if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()
-    ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+function New-Log {
+    $logFolder = "$PSScriptRoot\tsLogs"
+    if (-not (Test-Path $logFolder)) {
+        New-Item -ItemType Directory -Path $logFolder | Out-Null
+    }
 
-    Write-Host "Re-launching script with Administrator privileges..."
+    $script:logFile = Join-Path $logFolder "tslog_${logDate}.txt"
+    Start-Transcript -Path $logFile -Append > $null
+}
 
-    $scriptPath = $PSCommandPath
-    Start-Process "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-Command", "& {cd '$currentDirectory'; & '$scriptPath'}" -Verb RunAs
-    exit 1
+function Write-Log {
+    param ([string]$Message)
+    $timestamp = Get-Date -Format "[MM-dd-yyyy | HH:mm:ss]"
+    Write-Host "$timestamp $Message"
+}
+
+function Close-Triage { 
+    Stop-Transcript > $null
+    Write-Host "`nPress any key to close..."
+    [void][System.Console]::ReadKey($true)
+}
+function Compare-Elevation {
+    # Relaunch script as admin if not already elevated
+    if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()
+        ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+
+        Write-Log "Re-launching script with Administrator privileges..."
+
+        $scriptPath = $PSCommandPath
+        Start-Process "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-Command", "& {cd '$currentDirectory'; & '$scriptPath'}" -Verb RunAs
+        exit 1
+    }
 }
 
 # Function to get current SSID
@@ -30,29 +54,49 @@ function Get-CurrentSSID {
 
 function Compare-Network {
     # Compare and take action
-    if ($currentSSID -ne $correctSSID) {
-        Write-Host "Connected to wrong network: '$currentSSID'. Expected: '$correctSSID'."
+    if (-not $currentSSID) {
+        Write-Log "No Wifi Connection Detected! Reconnecting to '$correctSSID"
+        
+        # Reconnect to correct SSID (profile must exist)
+        netsh wlan connect name="$correctSSID"
+        Write-Log "Attempting to reconnect to '$correctSSID'..."
+
+        Start-Sleep -Seconds $waitBeforeReconnectSeconds
+
+        Write-Log "Now Connected to '$(Get-CurrentSSID)'"
+
+    }
+    elseif ($currentSSID -ne $correctSSID) {
+        Write-Log "Connected to wrong network: '$currentSSID'. Expected: '$correctSSID'."
     
         # Disconnect
         netsh wlan disconnect
-        Write-Host "Disconnected from '$currentSSID'."
+        Write-Log "Disconnected from '$currentSSID'."
 
         # Wait before reconnecting
-        Start-Sleep -Seconds $waitBeforeReconnectSeconds
+        Start-Sleep -Seconds 3
 
         # Reconnect to correct SSID (profile must exist)
         netsh wlan connect name="$correctSSID"
-        Write-Host "Attempting to reconnect to '$correctSSID'..."
-    }
-    elseif (-not $currentSSID) {
-        Write-Host "No Wifi Connection Detected! Reconnecting to '$correctSSID"
+        Write-Log "Attempting to reconnect to '$correctSSID'..."
+
+        Start-Sleep -Second 3
+
+        Write-Log "Now Connected to '$(Get-CurrentSSID)'"
+
     }
     else {
-        Write-Host "Already connected to the correct network: '$correctSSID'."
+        Write-Log "Already connected to the correct network: '$correctSSID'."
     }
 }
 
+
+
 try {
+    Compare-Elevation
+
+    New-Log
+
     # Get current SSID
     $currentSSID = Get-CurrentSSID
 
@@ -60,5 +104,8 @@ try {
     Compare-Network
 }
 catch {
-    Write-Host "UNHANDLED EXCEPTION: $_"
+    Write-Log "UNHANDLED EXCEPTION: $_"
+}
+finally {
+    Close-Triage
 }
