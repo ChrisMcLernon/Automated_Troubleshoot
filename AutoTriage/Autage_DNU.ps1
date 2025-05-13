@@ -37,7 +37,6 @@ function Set-PathsAndDirs {
     $script:triageDir = Join-Path $currentDirectory "triage_$($script:incidentNumber)"
     $script:xccOutputFile = "XCCPEM_$($script:incidentNumber).txt"
     $script:stackTraceFile = "stack_$($script:incidentNumber).txt"
-    $script:jmapDumpFile = "heapdump_$($script:incidentNumber).hprof"
     $script:promoLogPath = Join-Path $script:triageDir "promoFiles_$($script:incidentNumber).log"
 }
 
